@@ -25,7 +25,11 @@ class Tdd::CommandLineParser
 
   def test_command
     command = "#{@test_framework} #{@test_args}"
-    command.prepend("bundle exec ") if bundle_exec?
+    if spring?
+      command.prepend("spring ")
+    elsif bundle_exec?
+      command.prepend("bundle exec ")
+    end
     command
   end
 
@@ -76,5 +80,9 @@ class Tdd::CommandLineParser
   def bundle_exec?
     return false if @no_bundle
     Dir.glob("Gemfile*").any?
+  end
+
+  def spring?
+    ENV["SPRING_COMMAND"]
   end
 end
